@@ -26,3 +26,25 @@ function() {
   pubsub.publish('test', 'Hello world!');
 }();
 ```
+
+Observer Example:
+```
+function() {
+  var subject = new EventFactory.Observable.Subject();
+  var observer = new EventFactory.Observable.Observer();
+  
+  observer.addListener('Event1', function() {
+    alert('Event1 fired!');
+  });
+  
+  observer.addListener('Event1', function() {
+    alert('Event1 fired again!');
+  });
+  
+  subject.attach(observer);
+  subject.notify('Event1');
+  
+  subject.detach(observer);
+  subject.notify('Event1'); // previous attachments will no longer receive these notifications
+}();
+```
