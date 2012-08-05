@@ -3,8 +3,8 @@ var EventFactory = {}
 EventFactory.PublishSubscribe = function(args) {
   'use strict';
 
-  this
-    .channels = {};
+  this._channels = {};
+  this.EVENT_STOP_PROPOGATION = 'STOPPROPOGATION';
 
   //Ensure new
   if (!(this instanceof EventFactory.PublishSubscribe)) {
@@ -16,8 +16,8 @@ EventFactory.PublishSubscribe = function(args) {
   }
 };
 
-EventFactory.PublishSubscribe.prototype.createChannel = function createChannel(channel, target) {  
-  if (typeof this.channels[channel] !== 'undefined') {
+EventFactory.PublishSubscribe.prototype.createChannel = function createChannel(channel) {  
+  if (typeof this._channels[channel] !== 'undefined') {
     throw 'Channel already exists';
   }
   
@@ -25,23 +25,29 @@ EventFactory.PublishSubscribe.prototype.createChannel = function createChannel(c
     target = document;
   }
 
-  this.channels[channel] = document.createEvent('Event');
-  this.channels[channel].initEvent(channel, true, false);
-  this.channels[channel].eventTarget = target;
+  this._channels[channel] = {
+    subscribers: [],
+    data: null
+  }
 }
 
 EventFactory.PublishSubscribe.prototype.publish = function publish(channel, message) {
-  if (typeof this.channels[channel] !== 'undefined') {
-    this.channels[channel].data = message;
-    this.channels[channel].eventTarget.dispatchEvent(this.channels[channel]);
+  if (typeof this._channels[channel] !== 'undefined') {
+    this._channels[channel].data = message;
+    
+    for(var i = 0, l = this._channels[channel].subscribers.length; i < l; i += 1) {
+      if (this._channels[channel].subscribers[i].call(this, message) === this.EVENT_STOP_PROPOGATION) {
+        break;
+      }
+    }
   } else {
     throw 'Channel not available';
   }
 };
 
 EventFactory.PublishSubscribe.prototype.subscribe = function subscribe(channel, callback) {
-  if (typeof this.channels[channel] !== 'undefined') {
-    this.channels[channel].eventTarget.addEventListener(channel, callback);
+  if (typeof this._channels[channel] !== 'undefined') {
+    this._channels[channel].subscribers.push(callback);
   } else {
     throw 'Channel not available';
   }

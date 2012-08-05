@@ -8,15 +8,15 @@
       var pubsub = new EventFactory.PublishSubscribe();
       pubsub.createChannel('test');
       
-      pubsub.subscribe('test', function(e) {
-        alert(e.data);
+      pubsub.subscribe('test', function(msg) {
+        alert(msg);
         
-        e.preventDefault();
-        e.stopPropagation();
-      }, false);
+        //return pubsub.EVENT_STOP_PROPOGATION;
+      });
       
-      pubsub.subscribe('test', function(e) {
-        alert('Again: ' + e.data);
+      pubsub.subscribe('test', function(msg) {
+        // Uncomment "return pubsub.EVENT_STOP_PROPOGATION" to see
+        alert('This message should be blocked');
       });
       
       pubsub.publish('test', 'Hello world!');
