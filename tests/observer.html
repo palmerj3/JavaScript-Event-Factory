@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="../eventfactory.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      var subject = new EventFactory.Observable.Subject();
+      
+      var observer = new EventFactory.Observable.Observer();
+      
+      observer.addListener('Event1', function() {
+        alert('Event1 fired!');
+      });
+      
+      observer.addListener('Event1', function() {
+        alert('Event1 fired again!');
+      });
+      
+      subject.attach(observer);
+      subject.notify('Event1');
+      
+      subject.detach(observer);
+      subject.notify('Event1');
+    </script>
+  </body>
+</html>
