@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="../eventfactory.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      var pubsub = new EventFactory.PublishSubscribe();
+      pubsub.createChannel('test');
+      
+      pubsub.subscribe('test', function(e) {
+        alert(e.data);
+        
+        e.preventDefault();
+        e.stopPropagation();
+      }, false);
+      
+      pubsub.subscribe('test', function(e) {
+        alert('Again: ' + e.data);
+      });
+      
+      pubsub.publish('test', 'Hello world!');
+    </script>
+  </body>
+</html>
