@@ -1,7 +1,7 @@
 var EventFactory = {};
 
 /* Pub Sub */
-EventFactory.PublishSubscribe = function(args) {
+EventFactory.PublishSubscribe = function (args) {
   'use strict';
 
   this._channels = {};
@@ -12,26 +12,28 @@ EventFactory.PublishSubscribe = function(args) {
   }
 };
 
-EventFactory.PublishSubscribe.prototype.createChannel = function createChannel(channel) {  
-  if (typeof this._channels[channel] !== 'undefined') {
+EventFactory.PublishSubscribe.prototype.createChannel = function createChannel(channel) {
+  'use strict';
+
+  if (this._channels[channel] !== undefined) {
     throw 'Channel already exists';
-  }
-  
-  if (typeof target === 'undefined') {
-    target = document;
   }
 
   this._channels[channel] = {
     subscribers: [],
     data: null
-  }
+  };
 };
 
 EventFactory.PublishSubscribe.prototype.publish = function publish(channel, message) {
-  if (typeof this._channels[channel] !== 'undefined') {
+  'use strict';
+  var i,
+    l;
+
+  if (this._channels[channel] !== undefined) {
     this._channels[channel].data = message;
-    
-    for(var i = 0, l = this._channels[channel].subscribers.length; i < l; i += 1) {
+
+    for (i = 0, l = this._channels[channel].subscribers.length; i < l; i += 1) {
       if (this._channels[channel].subscribers[i].call(this, message) === this.EVENT_STOP_PROPOGATION) {
         break;
       }
@@ -42,7 +44,9 @@ EventFactory.PublishSubscribe.prototype.publish = function publish(channel, mess
 };
 
 EventFactory.PublishSubscribe.prototype.subscribe = function subscribe(channel, callback) {
-  if (typeof this._channels[channel] !== 'undefined') {
+  'use strict';
+
+  if (this._channels[channel] !== undefined) {
     this._channels[channel].subscribers.push(callback);
   } else {
     throw 'Channel not available';
@@ -53,18 +57,26 @@ EventFactory.PublishSubscribe.prototype.subscribe = function subscribe(channel, 
 EventFactory.Observable = {};
 
 EventFactory.Observable.Subject = function Subject(args) {
+  'use strict';
+
   if (!(this instanceof EventFactory.Observable.Subject)) {
     return new EventFactory.Observable.Subject(args);
   }
-  
+
   this.observers = [];
 };
 
 
 EventFactory.Observable.Subject.prototype.notify = function notify(method) {
-  for (var i = 0, l = this.observers.length; i < l; i += 1) {
-    if (typeof(this.observers[i].listeners[method]) !== 'undefined') {
-      for (var x = 0, xl = this.observers[i].listeners[method].length; x < xl; x += 1) {
+  'use strict';
+  var i,
+    l,
+    x,
+    xl;
+
+  for (i = 0, l = this.observers.length; i < l; i += 1) {
+    if (this.observers[i].listeners[method] !== undefined) {
+      for (x = 0, xl = this.observers[i].listeners[method].length; x < xl; x += 1) {
         this.observers[i].listeners[method][x].call(this);
       }
     }
@@ -72,12 +84,16 @@ EventFactory.Observable.Subject.prototype.notify = function notify(method) {
 };
 
 EventFactory.Observable.Subject.prototype.attach = function attach(observer) {
+  'use strict';
+
   if (this.observers.indexOf(observer) === -1) {
     this.observers.push(observer);
   }
 };
 
 EventFactory.Observable.Subject.prototype.detach = function detach(observer) {
+  'use strict';
+
   var indexOfObserver = this.observers.indexOf(observer);
 
   if (indexOfObserver === -1) {
@@ -88,6 +104,8 @@ EventFactory.Observable.Subject.prototype.detach = function detach(observer) {
 };
 
 EventFactory.Observable.Observer = function Observer(args) {
+  'use strict';
+
   if (!(this instanceof EventFactory.Observable.Observer)) {
     return new EventFactory.Observable.Observer(args);
   }
@@ -95,10 +113,12 @@ EventFactory.Observable.Observer = function Observer(args) {
   this.listeners = {};
 };
 
-EventFactory.Observable.Observer.prototype.addListener = function(method, callback) {
-  if (typeof(this.listeners[method]) === 'undefined') {
+EventFactory.Observable.Observer.prototype.addListener = function (method, callback) {
+  'use strict';
+
+  if (this.listeners[method] === undefined) {
     this.listeners[method] = [];
   }
-  
+
   this.listeners[method].push(callback);
 };
