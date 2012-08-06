@@ -1,4 +1,4 @@
-JavaScript-Event-Factory
+JavaScript Event Factory
 ============================
 
 A pure JavaScript messaging system that will provide the most common messaging patterns such as Pub/Sub and Observer.
