@@ -2,24 +2,27 @@
 <html>
   <head>
     <script type="text/javascript" src="../eventfactory.js"></script>
+    <script type="text/javascript">
+      (function() {
+        var pubsub = new EventFactory.PublishSubscribe();
+        pubsub.createChannel('test');
+
+        pubsub.subscribe('test', function(msg) {
+          alert(msg);
+
+          return pubsub.EVENT_STOP_PROPOGATION;
+        });
+
+        pubsub.subscribe('test', function(msg) {
+          // Uncomment "return pubsub.EVENT_STOP_PROPOGATION" to see
+          alert('This message should be blocked');
+        });
+
+        pubsub.publish('test', 'Hello world!');
+      }());
+    </script>
   </head>
   <body>
-    <script type="text/javascript">
-      var pubsub = new EventFactory.PublishSubscribe();
-      pubsub.createChannel('test');
-      
-      pubsub.subscribe('test', function(msg) {
-        alert(msg);
-        
-        //return pubsub.EVENT_STOP_PROPOGATION;
-      });
-      
-      pubsub.subscribe('test', function(msg) {
-        // Uncomment "return pubsub.EVENT_STOP_PROPOGATION" to see
-        alert('This message should be blocked');
-      });
-      
-      pubsub.publish('test', 'Hello world!');
-    </script>
+
   </body>
 </html>

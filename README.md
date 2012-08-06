@@ -8,7 +8,7 @@ This is currently in development, so use at your own risk.
 Pub/Sub Example:
 
 ```
-function() {
+(function() {
   var pubsub = new EventFactory.PublishSubscribe();
   pubsub.createChannel('test');
 
@@ -24,12 +24,12 @@ function() {
   });
 
   pubsub.publish('test', 'Hello world!');
-}();
+}());
 ```
 
 Observer Example:
 ```
-function() {
+(function() {
   var subject = new EventFactory.Observable.Subject();
   var observer = new EventFactory.Observable.Observer();
   
@@ -46,5 +46,5 @@ function() {
   
   subject.detach(observer);
   subject.notify('Event1'); // previous attachments will no longer receive these notifications
-}();
+}());
 ```
