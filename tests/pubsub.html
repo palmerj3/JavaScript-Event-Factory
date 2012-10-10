@@ -7,15 +7,22 @@
         var pubsub = new EventFactory.PublishSubscribe();
         pubsub.createChannel('test');
 
+        // Subscribe
         pubsub.subscribe('test', function(msg) {
           alert(msg);
 
           return pubsub.EVENT_STOP_PROPOGATION;
         });
+        
+        //Unsubscribe
+        var subscriberId = pubsub.subscribe('test', function(msg) {
+          alert('This should not be fired');
+        });
+        pubsub.unsubscribe(subscriberId);
 
         pubsub.subscribe('test', function(msg) {
           // Uncomment "return pubsub.EVENT_STOP_PROPOGATION" to see
-          alert('This message should be blocked');
+          alert('This message should be blocked due to STOP PROPOGATION');
         });
 
         pubsub.publish('test', 'Hello world!');

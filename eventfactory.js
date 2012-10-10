@@ -27,6 +27,7 @@ EventFactory.PublishSubscribe.prototype.createChannel = function createChannel(c
 
 EventFactory.PublishSubscribe.prototype.publish = function publish(channel, message) {
   'use strict';
+
   var i,
     l;
 
@@ -48,8 +49,22 @@ EventFactory.PublishSubscribe.prototype.subscribe = function subscribe(channel, 
 
   if (this._channels[channel] !== undefined) {
     this._channels[channel].subscribers.push(callback);
+    return channel + '^^' + (this._channels[channel].subscribers.length -1);
   } else {
     throw 'Channel not available';
+  }
+};
+
+EventFactory.PublishSubscribe.prototype.unsubscribe = function unsubscribe(callbackId) {
+  'use strict';
+  var callbackIdComponents = callbackId.split('^^'),
+      channel = callbackIdComponents[0],
+      subscriberIndex = callbackIdComponents[1];
+
+  if (this._channels[channel] !== undefined && this._channels[channel].subscribers[subscriberIndex] !== undefined) {
+    this._channels[channel].subscribers.splice(subscriberIndex, 1);
+  } else {
+    throw 'Subscription not available';
   }
 };
 
@@ -69,6 +84,7 @@ EventFactory.Observable.Subject = function Subject(args) {
 
 EventFactory.Observable.Subject.prototype.notify = function notify(method) {
   'use strict';
+
   var i,
     l,
     x,
